@@ -20,7 +20,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.chunk.ChunkNibbleArray;
 import net.minecraft.world.chunk.PalettedContainer;
 import net.minecraft.world.chunk.ReadableContainer;
-import net.minecraft.world.storage.ChunkStreamVersion;
+import net.minecraft.world.storage.ChunkCompressionFormat;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.*;
@@ -32,7 +32,6 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class WorldImporter {
@@ -94,7 +93,7 @@ public class WorldImporter {
             }
         };
 
-        this.biomeCodec = PalettedContainer.createReadableContainerCodec(biomeRegistry.getIndexedEntries(), biomeRegistry.createEntryCodec(), PalettedContainer.PaletteProvider.BIOME, biomeRegistry.entryOf(BiomeKeys.PLAINS));
+        this.biomeCodec = PalettedContainer.createReadableContainerCodec(biomeRegistry.getIndexedEntries(), biomeRegistry.getEntryCodec(), PalettedContainer.PaletteProvider.BIOME, biomeRegistry.entryOf(BiomeKeys.PLAINS));
     }
 
 
@@ -206,12 +205,12 @@ public class WorldImporter {
     }
 
     private DataInputStream decompress(byte flags, InputStream stream) throws IOException {
-        ChunkStreamVersion chunkStreamVersion = ChunkStreamVersion.get(flags);
-        if (chunkStreamVersion == null) {
+        ChunkCompressionFormat chunkCompressionFormat = ChunkCompressionFormat.get(flags);
+        if (chunkCompressionFormat == null) {
             System.err.println("Chunk has invalid chunk stream version");
             return null;
         } else {
-            return new DataInputStream(chunkStreamVersion.wrap(stream));
+            return new DataInputStream(chunkCompressionFormat.wrap(stream));
         }
     }
 
