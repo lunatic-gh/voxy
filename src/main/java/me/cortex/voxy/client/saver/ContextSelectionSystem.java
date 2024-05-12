@@ -117,7 +117,7 @@ public class ContextSelectionSystem {
                     System.err.println("Server info null");
                     basePath = basePath.resolve("UNKNOWN");
                 } else {
-                    if (info.isRealm()) {
+                    if (!info.isLocal()) {
                         basePath = basePath.resolve("realms");
                     } else {
                         basePath = basePath.resolve(info.address.replace(":", "_"));

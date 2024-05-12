@@ -13,6 +13,7 @@ import org.apache.commons.lang3.stream.Streams;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class MemoryStorageBackend extends StorageBackend {
     private final Long2ObjectMap<ByteBuffer>[] maps;
@@ -103,7 +104,7 @@ public class MemoryStorageBackend extends StorageBackend {
 
     @Override
     public void close() {
-        Streams.of(this.maps).map(Long2ObjectMap::values).flatMap(ObjectCollection::stream).forEach(MemoryUtil::memFree);
+        Arrays.stream(this.maps).map(Long2ObjectMap::values).flatMap(ObjectCollection::stream).forEach(MemoryUtil::memFree);
         this.idMappings.values().forEach(MemoryUtil::memFree);
     }
 

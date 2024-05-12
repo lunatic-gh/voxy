@@ -5,7 +5,6 @@ import me.cortex.voxy.client.core.util.ByteBufferBackedInputStream;
 import me.cortex.voxy.common.voxelization.VoxelizedSection;
 import me.cortex.voxy.common.voxelization.WorldConversionFactory;
 import me.cortex.voxy.common.world.WorldEngine;
-import me.cortex.voxy.common.world.other.Mipper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,7 +19,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.chunk.ChunkNibbleArray;
 import net.minecraft.world.chunk.PalettedContainer;
 import net.minecraft.world.chunk.ReadableContainer;
-import net.minecraft.world.storage.ChunkCompressionFormat;
+import net.minecraft.world.storage.ChunkStreamVersion;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.*;
@@ -93,7 +92,7 @@ public class WorldImporter {
             }
         };
 
-        this.biomeCodec = PalettedContainer.createReadableContainerCodec(biomeRegistry.getIndexedEntries(), biomeRegistry.getEntryCodec(), PalettedContainer.PaletteProvider.BIOME, biomeRegistry.entryOf(BiomeKeys.PLAINS));
+        this.biomeCodec = PalettedContainer.createReadableContainerCodec(biomeRegistry.getIndexedEntries(), biomeRegistry.createEntryCodec(), PalettedContainer.PaletteProvider.BIOME, biomeRegistry.entryOf(BiomeKeys.PLAINS));
     }
 
 
@@ -189,7 +188,7 @@ public class WorldImporter {
                                 if (decompressedData == null) {
                                     System.err.println("Error decompressing chunk data");
                                 } else {
-                                    var nbt = NbtIo.readCompound(decompressedData);
+                                    var nbt = NbtIo.read(decompressedData);
                                     this.importChunkNBT(nbt);
                                 }
                             }
@@ -205,7 +204,7 @@ public class WorldImporter {
     }
 
     private DataInputStream decompress(byte flags, InputStream stream) throws IOException {
-        ChunkCompressionFormat chunkCompressionFormat = ChunkCompressionFormat.get(flags);
+        ChunkStreamVersion chunkCompressionFormat = ChunkStreamVersion.get(flags);
         if (chunkCompressionFormat == null) {
             System.err.println("Chunk has invalid chunk stream version");
             return null;

@@ -3,7 +3,6 @@ package me.cortex.voxy.client.config;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.cortex.voxy.client.core.IGetVoxelCore;
-import me.shedaniel.clothconfig2.ClothConfigDemo;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;

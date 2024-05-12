@@ -20,7 +20,7 @@ public class MixinClientChunkManager {
     @Shadow @Final ClientWorld world;
 
     @Inject(require = 0, method = "unload", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;compareAndSet(ILnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/chunk/WorldChunk;)Lnet/minecraft/world/chunk/WorldChunk;", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void injectUnload(ChunkPos pos, CallbackInfo ci, int index, WorldChunk worldChunk) {
+    private void injectUnload(int chunkX, int chunkZ, CallbackInfo ci, int i, WorldChunk worldChunk) {
         var core = ((IGetVoxelCore)(world.worldRenderer)).getVoxelCore();
         if (core != null && VoxyConfig.CONFIG.ingestEnabled) {
             //core.enqueueIngest(worldChunk);
