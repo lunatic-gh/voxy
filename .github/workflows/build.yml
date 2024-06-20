@@ -37,5 +37,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
+          path: build/libs
           files: |
             build/libs/voxy-*.jar
