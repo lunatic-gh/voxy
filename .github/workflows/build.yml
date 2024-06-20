@@ -1,0 +1,33 @@
+name: Publish on GitHub
+on: [ pull_request, push ]
+
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+      - name: Build
+        run: ./gradlew clean build
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: release
+          name: Voxy
+          draft: false
+          prerelease: false
+          files: |
+            build/libs/voxy-*.jar
